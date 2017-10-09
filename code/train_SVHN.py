@@ -19,7 +19,7 @@ if use_cuda:
 
 
 def train_model(data_loc, model_name, noise_dim=128, dim_factor=64,
-                K=5, early_K=100, lmbda=10., batch_size=64, n_epochs=140,
+                K=5, lmbda=10., batch_size=64, n_epochs=140,
                 learning_rate=1e-4):
     # create folder to store model results
     model_folder = join('models', model_name)
@@ -68,8 +68,7 @@ def train_model(data_loc, model_name, noise_dim=128, dim_factor=64,
             X_var = Variable(X_tensor, requires_grad=False)
             # calculate total iterations
             i = bpe * ie + ib
-            if ((((i % K) == (K - 1)) and i > 1000) or
-                    (((i % early_K) == (early_K - 1)) and i < 1000)):
+            if (i % K) == (K - 1):
                 # train generator
                 enable_gradients(gen_net)  # enable gradients for gen net
                 disable_gradients(disc_net)  # saves computation on backprop
